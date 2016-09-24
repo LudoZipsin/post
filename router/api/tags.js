@@ -1,24 +1,52 @@
-module.exports = function(router){
+module.exports = function(router, modeler){
 	
     // get all tags
     router.route('/')
     .get(function(req, res){
-    	res.send('tags called');
-    	console.log('tags called');
+    	modeler.Tags.forge()
+        .fetch()
+        .then(function(collection){
+            res.json({error: false, data: collection.toJSON()});
+        })
+        .catch(function(err){
+            res.status(500).json({error: true, data: {message: err.message}});
+        });
     });
 
     // get the id of the tag with name :name
     router.route('/name/:name')
     .get(function(req, res){
-    	res.send('tags called with name: ' + req.params.name);
-    	console.log('tags name called with: ' + req.params.name);
+        modeler.Tag.forge({name: req.params.name})
+        .fetch()
+        .then(function(tag){
+            if (!tag){
+                res.status(404).json({error: true, data: {}});
+            }
+            else {
+                res.json({error: false, data: tag.toJSON()});
+            }
+        })
+        .catch(function(err){
+            res.status(500).json({error: true, data: {message: err.message}});
+        });
     });
 
     // get the name of the tag with id :id
     router.route('/:id')
     .get(function(req, res){
-        res.send('tags called with id: ' + req.params.id);
-        console.log('tags id called with: ' + req.params.id);
+        modeler.Tag.forge({id: req.params.id})
+        .fetch()
+        .then(function(tag){
+            if (!tag){
+                res.status(404).json({error: true, data: {}});
+            }
+            else {
+                res.json({error: false, data: tag.toJSON()});
+            }
+        })
+        .catch(function(err){
+            res.status(500).json({error: true, data: {message: err.message}});
+        });
     });
 
 };
