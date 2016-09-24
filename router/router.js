@@ -11,7 +11,7 @@ module.exports.app = function(app, express) {
 	require('./api/tags.js')(api_tags_routes, modeler);
 
 	api_categories_routes = express.Router();
-	require('./api/categories.js')(api_categories_routes);
+	require('./api/categories.js')(api_categories_routes, modeler);
 
 	app.use('/api/packages', api_packages_routes);
 	app.use('/api/tags', api_tags_routes);
