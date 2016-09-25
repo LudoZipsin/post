@@ -5,7 +5,7 @@ modeler = require('../models/modeler');
 module.exports.app = function(app, express) {
 	
 	api_packages_routes = express.Router();
-	require('./api/packages.js')(api_packages_routes);
+	require('./api/packages.js')(api_packages_routes, modeler);
 	
 	api_tags_routes = express.Router();
 	require('./api/tags.js')(api_tags_routes, modeler);
