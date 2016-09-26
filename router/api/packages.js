@@ -81,24 +81,80 @@ module.exports = function(router, modeler){
         });
     });    
 
-    router.route('/tags/:id/categories/:id')
+    router.route('/tags/:tag_id/categories/:cat_id')
     .get(function(req, res){
-        // TODO
+        var query = "SELECT DISTINCT packages.id, packages.name, packages.descriptionShort, packages.descriptionLong, packages.preSelected FROM packages, packages_categories, packages_tags WHERE packages_categories.category_id = ? AND packages_categories.package_id=packages.id AND packages_tags.tag_id = ? AND packages_tags.package_id = packages.id";
+        modeler.knex.raw(query, [req.params.cat_id, req.params.tag_id])
+               .then(function(collection){
+                   
+                   console.log();
+                   if (!collection){
+                       res.status(404).json({error: true, data: {}});
+                   }
+                   else {
+                       res.json({error: false, data: JSON.parse(JSON.stringify(collection[0]))});
+                   }
+               })
+               .catch(function(err){
+                   res.status(500).json({error: true, data: {message: err.message}});
+               });
     });
 
     router.route('/tags/:id/categories/name/:name')
     .get(function(req, res){
-        // TODO
+        var query = "SELECT DISTINCT packages.id, packages.name, packages.descriptionShort, packages.descriptionLong, packages.preSelected FROM packages, packages_categories, categories, packages_tags WHERE categories.name=? AND packages_categories.category_id = categories.id AND packages_categories.package_id=packages.id AND packages_tags.tag_id = ? AND packages_tags.package_id = packages.id";
+        modeler.knex.raw(query, [req.params.name, req.params.id])
+               .then(function(collection){
+                   
+                   console.log();
+                   if (!collection){
+                       res.status(404).json({error: true, data: {}});
+                   }
+                   else {
+                       res.json({error: false, data: JSON.parse(JSON.stringify(collection[0]))});
+                   }
+               })
+               .catch(function(err){
+                   res.status(500).json({error: true, data: {message: err.message}});
+               });
     });
 
     router.route('/tags/name/:name/categories/:id')
     .get(function(req, res){
-        // TODO
+        var query = "SELECT DISTINCT packages.id, packages.name, packages.descriptionShort, packages.descriptionLong, packages.preSelected FROM packages, packages_categories, packages_tags, tags WHERE packages_categories.category_id = ? AND packages_categories.package_id=packages.id AND tags.name = ? AND packages_tags.tag_id = tags.id AND packages_tags.package_id = packages.id";
+        modeler.knex.raw(query, [req.params.id, req.params.name])
+               .then(function(collection){
+                   
+                   console.log();
+                   if (!collection){
+                       res.status(404).json({error: true, data: {}});
+                   }
+                   else {
+                       res.json({error: false, data: JSON.parse(JSON.stringify(collection[0]))});
+                   }
+               })
+               .catch(function(err){
+                   res.status(500).json({error: true, data: {message: err.message}});
+               });
     });
 
-    router.route('/tags/name/:name/categories/name/:name')
+    router.route('/tags/name/:tag_name/categories/name/:cat_name')
     .get(function(req, res){
-        // TODO
+        var query = "SELECT DISTINCT packages.id, packages.name, packages.descriptionShort, packages.descriptionLong, packages.preSelected FROM packages, packages_categories, categories, packages_tags, tags WHERE categories.name=? AND packages_categories.category_id = categories.id AND packages_categories.package_id=packages.id AND tags.name = ? AND packages_tags.tag_id = tags.id AND packages_tags.package_id = packages.id";
+        modeler.knex.raw(query, [req.params.cat_name, req.params.tag_name])
+               .then(function(collection){
+                   
+                   console.log();
+                   if (!collection){
+                       res.status(404).json({error: true, data: {}});
+                   }
+                   else {
+                       res.json({error: false, data: JSON.parse(JSON.stringify(collection[0]))});
+                   }
+               })
+               .catch(function(err){
+                   res.status(500).json({error: true, data: {message: err.message}});
+               });
     });
 
     router.route('/:id/installs')
